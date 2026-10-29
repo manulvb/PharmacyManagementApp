@@ -1,0 +1,15 @@
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS pharmacie_db;
+USE pharmacie_db;
+
+-- Création de la table des médicaments
+CREATE TABLE IF NOT EXISTS medicaments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(150) NOT NULL,
+    stock INT NOT NULL,
+    prix DECIMAL(10, 2) NOT NULL
+);
+
+-- Exemple d'insertion de test
+INSERT INTO medicaments (nom, stock, prix) VALUES ('Paracétamol 500mg', 50, 500.00);
+INSERT INTO medicaments (nom, stock, prix) VALUES ('Ibuprofène 400mg', 30, 750.00);
