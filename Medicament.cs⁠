@@ -1,0 +1,10 @@
+public class Medicament
+{
+    public int Id { get; set; }
+    public string Nom { get; set; }
+    public string Forme { get; set; }
+    public string Dosage { get; set; }
+    public decimal PrixVente { get; set; }
+    public int Stock { get; set; }
+    public DateTime DatePeremption { get; set; }
+}
