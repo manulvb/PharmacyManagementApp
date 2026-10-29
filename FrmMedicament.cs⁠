@@ -1,0 +1,95 @@
+using System;
+using System.Data;
+using System.Windows.Forms;
+
+namespace GestionPharmacie
+{
+    public partial class FrmMedicament : Form
+    {
+        private DatabaseHelper dbHelper;
+
+        public FrmMedicament()
+        {
+            InitializeComponent();
+            dbHelper = new DatabaseHelper();
+        }
+
+        private void FrmMedicament_Load(object sender, EventArgs e)
+        {
+            ChargerMedicaments();
+        }
+
+        // Charger tous les médicaments dans le DataGridView
+        private void ChargerMedicaments()
+        {
+            try
+            {
+                DataTable dt = dbHelper.ObtenirMedicaments();
+                dgvMedicaments.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur de chargement : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Bouton Ajouter
+        private void btnAjouter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string nom = txtNom.Text.Trim();
+                int stock = int.Parse(txtStock.Text.Trim());
+                decimal prix = decimal.Parse(txtPrix.Text.Trim());
+
+                if (string.IsNullOrEmpty(nom))
+                {
+                    MessageBox.Show("Veuillez entrer un nom de médicament.", "Avertissement", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                bool resultat = dbHelper.AjouterMedicament(nom, stock, prix);
+
+                if (resultat)
+                {
+                    MessageBox.Show("Médicament ajouté avec succès !", "Succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ChargerMedicaments();
+                    ViderChamps();
+                }
+                else
+                {
+                    MessageBox.Show("Échec de l'ajout.", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Veuillez entrer des valeurs valides pour le stock et le prix.", "Erreur de format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur : " + ex.Message);
+            }
+        }
+
+        // Vider les champs de texte après l'ajout
+        private void ViderChamps()
+        {
+            txtNom.Clear();
+            txtStock.Clear();
+            txtPrix.Clear();
+            txtNom.Focus();
+        }
+
+        // Sélection d'une ligne dans le tableau pour modification/suppression
+        private void dgvMedicaments_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvMedicaments.Rows[e.RowIndex];
+                txtNom.Text = row.Cells["nom"].Value.ToString();
+                txtStock.Text = row.Cells["stock"].Value.ToString();
+                txtPrix.Text = row.Cells["prix"].Value.ToString();
+            }
+        }
+    }
+}
