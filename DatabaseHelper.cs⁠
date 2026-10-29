@@ -1,0 +1,13 @@
+using System;
+using System.Data;
+using MySql.Data.MySqlClient; // Ou System.Data.SqlClient pour SQL Server
+
+public class DatabaseHelper
+{
+    private string connectionString = "Server=localhost;Database=pharmacie_db;Uid=root;Pwd=;";
+
+    public MySqlConnection GetConnection()
+    {
+        return new MySqlConnection(connectionString);
+    }
+}
